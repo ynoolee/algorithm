@@ -1,12 +1,10 @@
 class Solution {
-    private int len = 0;
     private boolean[][] dp = new boolean[201][20001];
     private int[] gnums;
     
     public boolean canPartition(int[] nums) {
         int sum = 0;
         
-        len = nums.length;
         gnums = nums;
 
         for(int n : nums) sum += n;
