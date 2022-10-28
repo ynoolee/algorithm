@@ -1,13 +1,12 @@
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    // 그냥 복습 겸..
-    // 다익스트라 O((V+E)LogV) 과 플로이드 워셜 O(V^3)
+
+    // 다익스트라 O(n^2LogN) 과 플로이드 워셜 O(N^3)
     // 다익스트라는 두 노드 사이의 최단 거리
-    // 플로이드 워셜은 모든 노드 사이의 최단 거리를 구할 수 있다
+    // 플로이드 워셜은 모든 노드 사이의 최단 거리
 
     /*
     * 다시 시작점으로 돌아오고 싶다 -> 사이클을 찾기를 원한다
@@ -36,14 +35,10 @@ public class Main {
 
 
         // 초기화
-        for(int a = 0; a < v; a++) {
-            for(int b = 0; b < v; b++) {
-                d[a][b] = Integer.MAX_VALUE;
-                d[b][a] = Integer.MAX_VALUE;
-                if(a==b) d[a][b] = 0; // 자기자신 -> 자신 : 비용 0 이죠
-            }
-        }
-        // 현재 직접적으로 연결되어 있지 않은 두 노드 a,b 에 대해서는 d[a][b] 는 Integer.MAX_VALUE 를 갖고 있다
+        // 플로이드 워셜 문제에 대해 아무생각 없이 "무한" 값으로 초기화 해 놓았음
+        // 그런데 다시 생각 해 보니, 굳이 MAX 값으로 초기화 할 필요가 없었던 것 같다.
+        // 주어진 모든 간선은 0 보다 큰 값을 갖기 때문이다. -> 따라서 여전히 0 을 갖는 d[a][b] 는 a->b 로의 경로가 없는 것이다
+        // 기존에 MAX 인지 확인하던 검증은 , 0 인지 검증하는 것으로 바꾸면 된다
 
         for(int i = 0; i < e; i++) {
             st = new StringTokenizer(br.readLine());
@@ -60,7 +55,7 @@ public class Main {
         for(int a = 0; a < v; a++) {
             for(int b = 0; b < v; b++) {
                 if(a == b) continue; // 자기 자신으로에 대한 사이클은 뛰어넘어야 해요
-                if(d[a][b] != Integer.MAX_VALUE && d[b][a] != Integer.MAX_VALUE) {
+                if(d[a][b] != 0 && d[b][a] != 0) {
                     ans = Math.min(ans, d[a][b] + d[b][a]);
                 }
             }
@@ -76,14 +71,14 @@ public class Main {
     // 플로이드 워셜 알고리즘
     private void floyd(int[][] g, int v) {
         // Dab = min(Dab, Dax + Dxb) 입니다.
-        // 오랜만에 푸니, 의문인 점이 있는데.. Integer.MAX_VALUE 로 해두면 Dax + Dxb 로 스택 오버 플로우가 일어나지 않나요?
-        // 내가 만약 "무한" 값을 Integer.MAX_VALUE 로 해 두었다면, Dax or Dxb 중 하나가 "무한"인지 확인하는 과정도 필요할 것 같아요
         for(int a = 0; a < v; a++) {
             for(int b = 0; b < v; b++) {
+                if(a==b) continue;
                 for(int x = 0; x < v; x++) {
                     if(x == a || x == b) continue;
-                    if(g[a][x] != Integer.MAX_VALUE && g[x][b] != Integer.MAX_VALUE) {
-                        g[a][b] = Math.min(g[a][b], g[a][x] + g[x][b]);
+                    if(g[a][x] != 0 && g[x][b] != 0 ) {
+                        if(g[a][b] == 0) g[a][b] = g[a][x] + g[x][b];
+                        else g[a][b] = Math.min(g[a][b], g[a][x] + g[x][b]);
                     }
                 }
             }
