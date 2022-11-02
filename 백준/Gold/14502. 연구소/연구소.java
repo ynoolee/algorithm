@@ -92,15 +92,6 @@ public class Main {
         visit[r][c] = true;
         q.add(new int[]{r,c});
 
-        // 바이러스들을 큐에 넣는다.
-        for(int cr = 0; cr < n; cr++) {
-            for(int cc = 0; cc < m; cc++) {
-                if(board[cr][cc] == 2 && !visit[cr][cc]) {
-                    q.add(new int[]{cr,cc});
-                    visit[cr][cc] = true;
-                }
-            }
-        }
 
         while(!q.isEmpty()) {
             int[] cur = q.poll();
