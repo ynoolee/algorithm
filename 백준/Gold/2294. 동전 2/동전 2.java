@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -10,7 +9,7 @@ public class Main {
 
     private StringTokenizer st;
 
-    private final int INIT = 10001;
+    private final int INIT = 10001; // Integer.MAX_VALUE 를 할 경우 틀렸습니다가 나온다
 
     private void run() throws Exception {
         st = new StringTokenizer(br.readLine());
@@ -58,6 +57,8 @@ public class Main {
             // 예를들어 3,6,9 에 대한 코인이 차례차례 1,2,3 개가 필요하다는 사실을 업데이트 하는것이 가능하다
             // dp[s] 를 구하기 위해 이미 구해놓은 dp[s-coins[i]] 를 사용하는 것이다
             for(int s = coins[i]; s <= k; s++) {
+                // INIT 값을 Integer.MAX_VALUE 로 초기화 해 둘 경우 , dp[s-coins[i]] 가 INIT 인 경우 오버플로우가 발생해 최소값이 업데이트 되어버린다
+                // 따라서 INIT 은 k + 1 정도로 세팅해두는 것이 필요하다
                 dp[s] = Math.min(dp[s], dp[s - coins[i]] + 1); // 현재 손에 쥔 동전 coins[i] 를 사용하는 경우니까 + 1 을 해야 함.
             }
         }
